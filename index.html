@@ -1,347 +1,940 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>JCS Consultoria e Análise de Dados</title>
-  <meta name="description" content="JCS Consultoria — modelagem de dados, análises estatísticas e Business Intelligence."/>
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JCS Consultoria e Análise de Dados</title>
+<meta name="description" content="JCS Consultoria - modelagem estatística, ciência de dados e apoio a decisões." />
+
+<!-- Open Graph (estava faltando no original) -->
+<meta property="og:title" content="JCS Consultoria e Análise de Dados" />
+<meta property="og:description" content="Estatística, machine learning e bancos de dados a serviço de pesquisas e negócios." />
+<meta property="og:type" content="website" />
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+  --ink: #F3F2ED;         /* agora é o texto claro (era o fundo escuro) */
+  --ink-soft: #A9ADB8;    /* texto secundário claro */
+  --paper: #14161D;       /* agora é o fundo escuro da página (era o papel claro) */
+  --paper-raised: #1B1E27;/* superfície escura elevada (cards) */
+  --line: rgba(255,255,255,0.12);
+  --accent: #4C6FFF;      /* azul-índice, um pouco mais vivo para o fundo escuro */
+  --accent-deep: #8CA0FF; /* azul claro, para links e badges sobre fundo escuro */
+  --amber: #D79A3D;       /* destaque tipo "grifo de relatório" */
+  --teal: #22B39F;        /* eco das cores dos gráficos */
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+  --radius: 4px;          /* Suavizado levemente de 2px para 4px */
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  z-index: 0;
+}
+/* Glow ambiente sutil, ecoando o fundo da tela de abertura */
+body::before{
+  content:"";
+  position:fixed; inset:-15%;
+  background:radial-gradient(circle at 50% -10%, rgba(76,111,255,.16), transparent 55%);
+  pointer-events:none;
+  z-index:-1;
+}
+img { max-width: 100%; display: block; height: auto; }
+a { color: inherit; text-decoration: none; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Espaçamento padrão das seções ---------- */
+/* Antes .section não tinha padding nenhum definido, por isso as seções
+   ficavam coladas umas nas outras. Isso resolve o "apertado". */
+.section {
+  padding: 96px 0;
+}
+.section.alt {
+  background: var(--paper-raised);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Utility / Eyebrow ---------- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.eyebrow::before {
+  content: "";
+  width: 16px; height: 1px; background: var(--accent); display: inline-block;
+}
+.eyebrow:empty { display: none; }
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; margin: 0 0 .4em; color: var(--ink); }
+h2 { font-size: clamp(32px, 4vw, 46px); letter-spacing: -.02em; line-height: 1.15; }
+p { color: var(--ink-soft); }
+
+/* ---------- Header ---------- */
+header.header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(20, 22, 29, 0.82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand .mark {
+  width: 36px; height: 36px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+}
+.brand-text h1 { font-size: 16px; margin: 0; line-height: 1; letter-spacing: .02em; }
+.brand-text small { font-family: var(--mono); font-size: 9px; color: var(--ink-soft); letter-spacing: .05em; text-transform: uppercase; }
+
+nav.nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
+nav.nav a {
+  font-size: 14px; color: var(--ink-soft); font-weight: 500; padding: 6px 0; transition: color .2s;
+}
+nav.nav a:hover { color: var(--ink); }
+
+.nav-cta {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase;
+  border: 1px solid var(--ink); padding: 8px 16px; border-radius: var(--radius);
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ink); color: var(--paper); }
+.menu-toggle { display: none; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 28px; font-size: 14px; font-weight: 600;
+  border-radius: var(--radius); border: 1px solid var(--ink);
+  transition: all .2s ease-in-out;
+}
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-1px); }
+.btn.ghost { color: var(--ink); border-color: var(--line); background: transparent; }
+.btn.ghost:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--ink); }
+
+/* Faixa de estatísticas — substitui a antiga hero, ecoando a splash */
+.stats-bar {
+  padding: 60px 0 52px;
+  border-bottom: 1px solid var(--line);
+}
+.stat-strip {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+}
+.stat { padding: 0 24px; border-left: 1px solid var(--line); }
+.stat:first-child { border-left: 0; padding-left: 0; }
+.stat .num { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--ink); letter-spacing: -0.03em; }
+.stat .lbl { font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.4; max-width: 22ch; }
+
+/* Responsividade Básica */
+@media (max-width: 900px) {
+  .stat-strip { grid-template-columns: 1fr; gap: 32px; }
+  .stat { border-left: 0; padding: 0; }
+  nav.nav, .nav-cta { display: none; } /* Ideal implementar menu mobile aqui */
+}
+
+  /* ---------- sobre ---------- */
+  .about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;}
+  .about-grid p{font-size:16px;}
+  .feature-list{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:0;}
+  .feature-list li{
+    display:grid;grid-template-columns:90px 1fr;gap:18px;
+    padding:18px 0;border-top:1px solid var(--line);
+  }
+  .feature-list li:last-child{border-bottom:1px solid var(--line);}
+  .feature-list .tag{font-family:var(--mono);font-size:11px;color:var(--accent-deep);letter-spacing:.06em;padding-top:2px;}
+  .feature-list strong{display:block;font-size:15px;margin-bottom:2px;}
+  .feature-list span{font-size:14px;color:var(--ink-soft);}
+
+  /* ---------- como funciona ---------- */
+  .process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;}
+  .process .step{padding:0 24px 0 0;border-left:1px solid var(--line);padding-left:24px;}
+  .process .step:first-child{border-left:0;padding-left:0;}
+  .process .step .n{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.08em;}
+  .process .step h3{margin-top:10px;font-size:19px;}
+  .process .step p{font-size:14px;}
+
+  /* ---------- serviços ---------- */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px;}
+  .service-card{background:var(--paper-raised);padding:32px;transition:background .2s;}
+  .service-card:hover{background:#20232E;}
+  .service-card .eyebrow{margin-bottom:18px;}
+  .service-card p{font-size:14.5px;}
+
+  /* ---------- galeria / cases ---------- */
+  .gallery-list{display:grid;grid-template-columns:repeat(2,1fr);gap:36px;margin-top:44px;}
+  .case{border:1px solid var(--line);background:var(--paper-raised);}
+  .case .thumb{
+    aspect-ratio:16/10;background:linear-gradient(135deg,#1E212B,#14161D);
+    display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .case .thumb img{width:100%;height:100%;object-fit:cover;}
+  .case .body{padding:20px 22px 24px;}
+  .case .fig{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:.05em;}
+  .case h3{font-size:18px;margin-bottom:8px;}
+  .case p{font-size:14px;margin-bottom:0;}
+
+  /* ---------- prova social ---------- */
+  .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px;}
+  .testi{background:var(--paper-raised);padding:28px;display:flex;flex-direction:column;gap:16px;}
+  .testi p{font-size:14.5px;font-style:italic;color:var(--ink);}
+  .testi .who{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+
+  /* ---------- equipe ---------- */
+  .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:44px;}
+  .member{border:1px solid var(--line);background:var(--paper-raised);}
+  .member .ph{aspect-ratio:4/5;background:#1E212B;}
+  .member .info{padding:18px 20px 22px;}
+  .member h3{font-size:17px;margin-bottom:4px;}
+  .member p{font-size:13.5px;margin-bottom:10px;}
+  .member .links{display:flex;gap:14px;font-family:var(--mono);font-size:11px;}
+  .member .links a{color:var(--accent-deep);border-bottom:1px solid transparent;}
+  .member .links a:hover{border-color:var(--accent-deep);}
+
+  /* ---------- publicações ---------- */
+  .pub-list{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px;}
+  .pub-card{
+    background:var(--paper-raised);
+    padding:28px 30px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:24px;
+    align-items:start;
+    transition:background .2s;
+  }
+  .pub-card:hover{background:#20232E;}
+  .pub-meta-row{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .pub-type{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent-deep);border:1px solid var(--accent-deep);padding:3px 8px;
+  }
+  .pub-year{
+    font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.04em;
+  }
+  .pub-card h3{font-size:19px;margin-bottom:6px;line-height:1.3;}
+  .pub-authors{
+    font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-style:italic;
+  }
+  .pub-excerpt{
+    font-size:14.5px;color:var(--ink-soft);
+    margin-bottom:0;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .pub-venue{
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:10px;
+  }
+  .pub-venue b{color:var(--ink);font-weight:600;}
+  .pub-action{
+    display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+    padding-top:2px;
+  }
+  .pub-link{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.03em;
+    border:1px solid var(--ink);padding:10px 16px;white-space:nowrap;
+    transition:background .2s,color .2s;
+  }
+  .pub-link:hover{background:var(--ink);color:var(--paper);}
+  .pub-link.disabled{
+    border-color:var(--line);color:var(--ink-soft);cursor:default;pointer-events:none;
+  }
+  .pub-link svg{width:12px;height:12px;flex-shrink:0;}
+
+  @media (max-width:700px){
+    .pub-card{grid-template-columns:1fr;}
+    .pub-action{flex-direction:row;align-items:center;justify-content:flex-start;}
+  }
+
+  /* ---------- contato ---------- */
+  .contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;margin-top:44px;}
+  .info-list{list-style:none;padding:0;margin:26px 0 0;}
+  .info-list li{display:flex;justify-content:space-between;padding:16px 0;border-top:1px solid var(--line);font-size:14.5px;}
+  .info-list li:last-child{border-bottom:1px solid var(--line);}
+  .info-list strong{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);}
+
+  .contact-form{display:grid;gap:18px;}
+  .contact-form label{display:grid;gap:6px;font-size:13px;color:var(--ink-soft);}
+  .contact-form input,.contact-form textarea{
+    font-family:var(--sans);font-size:15px;padding:12px 14px;
+    border:1px solid var(--line);background:var(--paper-raised);color:var(--ink);
+    outline:none;transition:border-color .2s;
+  }
+  .contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent);}
+  .form-actions{display:flex;gap:14px;margin-top:4px;}
+
+  /* ---------- footer ---------- */
+  footer.footer{padding:32px 0;border-top:1px solid var(--line);}
+  .footer-inner{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);font-family:var(--mono);}
+
+  @media (max-width:860px){
+    .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;}
+    .stat-strip,.process,.cards,.proof-grid,.team-grid,.gallery-list{grid-template-columns:repeat(2,1fr);}
+    nav.nav{display:none;}
+    .menu-toggle{display:block;}
+    .section{padding:64px 0;}
+  }
+  @media (max-width:520px){
+    .stat-strip,.process,.cards,.proof-grid,.gallery-list{grid-template-columns:1fr;}
+    .stat{border-left:0;border-top:1px solid var(--line);padding:18px 0 0;}
+    .stat:first-child{border-top:0;}
+    .section{padding:48px 0;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+
+  /* ---------- Splash / tela inicial ---------- */
+  html.no-scroll, html.no-scroll body { overflow:hidden; height:100%; }
+
+  #splash{
+    position:fixed; inset:0; z-index:999;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper);
+    overflow:hidden;
+    transition:opacity .8s ease, visibility .8s ease;
+  }
+  #splash::before{
+    content:"";
+    position:absolute; inset:-20%;
+    background:radial-gradient(circle at 50% 28%, rgba(47,79,224,.38), transparent 60%);
+    pointer-events:none;
+  }
+  #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+
+  .splash-inner{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; align-items:center; gap:26px;
+    text-align:center; padding:24px; max-width:560px;
+    opacity:0; transform:translateY(28px);
+    animation:splashIn 1s ease forwards .15s;
+  }
+  .splash-eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    color:rgba(246,245,241,.55);
+  }
+  .splash-figure{
+    width:min(320px, 62vw);
+    border:1px solid rgba(246,245,241,.14);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 24px 60px rgba(0,0,0,.35);
+  }
+  .splash-figure img{ width:100%; display:block; }
+  .splash-title{
+    font-family:var(--serif); color:var(--ink);
+    font-size:clamp(28px, 5.2vw, 44px); line-height:1.08; margin:0;
+  }
+  .splash-title em{ font-style:italic; color:var(--accent); }
+  .splash-start{
+    margin-top:6px;
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:12px; letter-spacing:.09em; text-transform:uppercase;
+    padding:16px 34px;
+    background:var(--ink); color:var(--paper); border:1px solid var(--ink);
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:background .2s, color .2s, transform .2s, border-color .2s;
+  }
+  .splash-start svg{ width:14px; height:14px; transition:transform .2s; }
+  .splash-start:hover{ background:var(--accent); border-color:var(--accent); color:#fff; transform:translateY(-2px); }
+  .splash-start:hover svg{ transform:translateX(4px); }
+
+  @keyframes splashIn{ to{ opacity:1; transform:none; } }
+
+  @media (prefers-reduced-motion:reduce){
+    .splash-inner{ animation:none; opacity:1; transform:none; }
+  }
+  @media (max-width:520px){
+    .splash-inner{ gap:20px; }
+  }
+
+  /* ---------- Barra de progresso de leitura ---------- */
+  #scroll-progress{
+    position:fixed; top:0; left:0; height:2px; width:0%;
+    background:var(--accent); z-index:60;
+  }
+
+  /* ---------- Revelação ao rolar (scroll reveal) ---------- */
+  .process .step,
+  .cards .service-card,
+  .gallery-list .case,
+  .team-grid .member,
+  .pub-list .pub-card,
+  .feature-list li,
+  .about-grid > div,
+  .contact-grid > div,
+  .section > .container > .eyebrow,
+  .section > .container > h2 {
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .in-view{ opacity:1 !important; transform:none !important; }
+
+  .process .step:nth-child(2){transition-delay:.09s}
+  .process .step:nth-child(3){transition-delay:.18s}
+  .process .step:nth-child(4){transition-delay:.27s}
+  .cards .service-card:nth-child(2){transition-delay:.08s}
+  .cards .service-card:nth-child(3){transition-delay:.16s}
+  .cards .service-card:nth-child(4){transition-delay:.24s}
+  .gallery-list .case:nth-child(2){transition-delay:.08s}
+  .gallery-list .case:nth-child(3){transition-delay:.16s}
+  .gallery-list .case:nth-child(4){transition-delay:.24s}
+  .team-grid .member:nth-child(2){transition-delay:.09s}
+  .team-grid .member:nth-child(3){transition-delay:.18s}
+  .pub-list .pub-card:nth-child(2){transition-delay:.1s}
+  .feature-list li:nth-child(2){transition-delay:.06s}
+  .feature-list li:nth-child(3){transition-delay:.12s}
+  .feature-list li:nth-child(4){transition-delay:.18s}
+  .about-grid > div:nth-child(2){transition-delay:.12s}
+  .contact-grid > div:nth-child(2){transition-delay:.12s}
+
+  /* ---------- Navegação: sublinhado animado ---------- */
+  nav.nav a{ position:relative; }
+  nav.nav a::after{
+    content:""; position:absolute; left:0; bottom:0; height:1px; width:0;
+    background:var(--ink); transition:width .25s ease;
+  }
+  nav.nav a:hover::after{ width:100%; }
+
+  /* ---------- Serviços: cartões com barra de destaque ---------- */
+  .service-card{ position:relative; transition:background .2s, transform .25s ease, box-shadow .25s ease; }
+  .service-card::before{
+    content:""; position:absolute; top:0; left:0; height:2px; width:0;
+    background:var(--accent); transition:width .3s ease;
+  }
+  .service-card:hover{ transform:translateY(-4px); box-shadow:0 20px 44px rgba(0,0,0,.5); z-index:1; }
+  .service-card:hover::before{ width:100%; }
+
+  /* ---------- Cases: zoom na imagem + elevação do card ---------- */
+  .case{ transition:transform .25s ease, box-shadow .25s ease; }
+  .case .thumb img{ transition:transform .5s ease; }
+  .case:hover{ transform:translateY(-4px); box-shadow:0 20px 44px rgba(0,0,0,.5); }
+  .case:hover .thumb img{ transform:scale(1.06); }
+
+  /* ---------- Equipe: foto em tons de cinza -> cor no hover ---------- */
+  .member{ transition:transform .25s ease, box-shadow .25s ease; }
+  .member .ph{ overflow:hidden; }
+  .member .ph img{ width:100%; height:100%; object-fit:cover; filter:grayscale(85%); transition:filter .4s ease, transform .5s ease; }
+  .member:hover{ transform:translateY(-4px); box-shadow:0 20px 44px rgba(0,0,0,.5); }
+  .member:hover .ph img{ filter:grayscale(0%); transform:scale(1.04); }
+
+  /* ---------- Publicações: barra de destaque + seta animada ---------- */
+  .pub-card{ border-left:3px solid transparent; transition:background .2s, border-color .25s ease; }
+  .pub-card:hover{ border-left-color:var(--accent); }
+  .pub-link svg{ transition:transform .2s ease; }
+  .pub-link:hover svg{ transform:translateX(3px); }
+
+  /* ---------- Sobre: destaque de linha ao passar o mouse ---------- */
+  .feature-list li{ transition:background .2s ease, padding-left .2s ease; }
+  .feature-list li:hover{ background:rgba(76,111,255,.10); padding-left:10px; }
+  .feature-list .tag{ transition:color .2s ease; }
+  .feature-list li:hover .tag{ color:var(--accent); }
+
+  /* ---------- Processo: destaque do número da etapa ---------- */
+  .process .step{ transition:transform .2s ease; }
+  .process .step:hover{ transform:translateY(-3px); }
+  .process .step .n{ transition:color .2s ease; }
+  .process .step:hover .n{ color:var(--accent); }
+
+  @media (prefers-reduced-motion:reduce){
+    .process .step, .cards .service-card, .gallery-list .case, .team-grid .member,
+    .pub-list .pub-card, .feature-list li, .about-grid > div, .contact-grid > div,
+    .section > .container > .eyebrow, .section > .container > h2 {
+      opacity:1; transform:none; transition:none;
+    }
+  }
+</style>
 </head>
 <body>
-  <header id="site-header" class="header" role="banner">
+
+  <div id="scroll-progress"></div>
+
+  <!-- SPLASH / TELA INICIAL -->
+  <div id="splash" role="dialog" aria-label="Tela de abertura">
+    <div class="splash-inner">
+      <div class="splash-eyebrow">JCS · Consultoria &amp; Análise de Dados</div>
+      <div class="splash-figure">
+        <img src="img/JCS_logo_animado.gif" alt="JCS Análise de Dados Animada">
+      </div>
+      <h2 class="splash-title">Consultória e <br> Análise de Dados</h2>
+      <button type="button" id="splash-start-btn" class="splash-start">
+        Iniciar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <header class="header">
     <div class="container header-inner">
-      <div class="brand" aria-hidden="false">
-        <img src="img/logojcs.png" alt="Logo JCS Consultoria e Análise de Dados" class="logo-mark">
+      <div class="brand">
+        <span class="mark">JCS</span>
         <div class="brand-text">
           <h1>JCS</h1>
           <small>Consultoria &amp; Análise de Dados</small>
         </div>
       </div>
-
-      <nav id="main-nav" class="nav" role="navigation" aria-label="Menu principal">
+      <nav class="nav">
         <ul>
-          <li><a href="#home" data-link>Início</a></li>
-          <li><a href="#sobre" data-link>Sobre</a></li>
-          <li><a href="#servicos" data-link>Serviços</a></li>
-          <li><a href="#cases" data-link>Projetos</a></li>
-          <li><a href="#contato" data-link>Contato</a></li>
-          <li><a href="#" id="open-game" aria-haspopup="dialog">Desafio</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#casos">Resultados</a></li>
+          <li><a href="#equipe">Equipe</a></li>
+          <li><a href="#publicacoes">Publicações</a></li>
+          <li><a href="#contato">Contato</a></li>
         </ul>
       </nav>
-
-      <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="#contato" class="nav-cta">Agendar conversa</a>
+      <button class="menu-toggle" aria-label="Abrir menu"><span></span><span></span><span></span></button>
     </div>
   </header>
 
   <main>
     <!-- HERO -->
-    <section id="home" class="hero" aria-label="Início">
-      <!-- hero background video (looping) -->
-      <video id="hero-video" class="hero-video" autoplay muted playsinline loop aria-hidden="true">
-        <source src="img/1.mp4" type="video/mp4">
-        <!-- fallback: nada -->
-      </video>
-
-      <!-- particles canvas sits above video and under content -->
-      <canvas id="particles-canvas" aria-hidden="true"></canvas>
-
-      <div class="hero-inner container">
-        <div class="hero-content">
-          <h2 class="hero-title">Transformamos dados em resultados de pesquisas e decisões estratégicas</h2>
-          <p class="hero-lead">Análise de dados e consultoria para organização e decisões acadêmicas e empresariais.</p>
-          <div class="hero-actions">
-            <a href="#contato" class="btn primary">Solicitar Orçamento</a>
-            <a href="#servicos" class="btn ghost">Ver Serviços</a>
-          </div>
-        </div>
-        <div class="hero-panel reveal delay-3" aria-hidden="true">
-          <img src="img/logojcs.png" alt="Foto logo JCS" height="174">
-        </div>
-      </div>
-    </section>
-
-    <!-- SOBRE (somente sobre) -->
-    <section id="sobre" class="section about" aria-label="Sobre a JCS">
+    <section class="hero" id="home">
       <div class="container">
-        <div class="split">
-          <div class="left">
-            <h2>Sobre</h2>
-            <p>Somos uma consultoria com expertise em estatística aplicada, ciência de dados e engenharia de informações. Atuamos com metodologias reprodutíveis, enfatizando privacidade, transparência e impacto mensurável.</p>
-            <ul class="features">
-              <li>Rigor metodológico e reprodutibilidade</li>
-              <li>Visualizações e dashboards acionáveis</li>
-              <li>Integração com processos decisórios</li>
-            </ul>
+
+        <div class="eyebrow">Home</div>
+
+        <div class="hero-grid">
+          <div class="hero-content">
+            <h2 class="hero-title">JCS Consultória e <br> <em>Análise de Dados</em></h2>
+            <p class="hero-lead">Modelagem estatística, machine learning e manipulação de bancos de dados para pesquisas baseadas em evidências.</p>
+            <div class="hero-actions">
+              <a href="#contato" class="btn primary">Solicitar orçamento</a>
+              <a href="#casos" class="btn ghost">Ver resultados</a>
+            </div>
+          </div>
+
+          <div class="hero-figure">
+            <div class="figure-header">
+
+            </div>
+            <div class="figure-content">
+              
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat">
+            <div class="num" data-count-to="3">3</div>
+            <div class="lbl">pesquisadores mestrandos/doutorandos</div>
+          </div>
+          <div class="stat">
+            <div class="num">R, Py e BI</div>
+            <div class="lbl">Softwares</div>
+          </div>
+          <div class="stat">
+            <div class="num" data-count-to="7" data-suffix="d">7d</div>
+            <div class="lbl">prazo médio de diagnóstico</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <!-- SOBRE -->
+    <section class="section" id="sobre">
+      <div class="container about-grid">
+        <div>
+          <div class="eyebrow">Sobre a JCS</div>
+          <h2>Rigor acadêmico aplicado a problemas reais.</h2>
+        </div>
+        <div>
+          <p>Somos uma consultoria formada por cientistas sociais e analistas de dados com atuação em pesquisa acadêmica. Combinamos estatística, programação e metodologia científica para transformar bases de dados em informação estratégica, sempre com processo documentado e reprodutível.</p>
+
+          <ul class="feature-list">
+            <li>
+              <span class="tag">MÉTODO</span>
+              <div><strong>Transparência reprodutível</strong><span>Cada análise vem com um relatório explicativo.</span></div>
+            </li>
+            <li>
+              <span class="tag">ORIGEM</span>
+              <div><strong>Formação acadêmica</strong><span>Equipe de mestrandos/doutoranda em Ciências Sociais e experiência aplicada em projetos.</span></div>
+            </li>
+            <li>
+              <span class="tag">FERRAMENTAL</span>
+              <div><strong>R, Python, SQL e BI</strong><span>Da limpeza do banco à visualização final.</span></div>
+            </li>
+            <li>
+              <span class="tag">ENTREGA</span>
+              <div><strong>Acompanhamento direto</strong><span>Você conversa com quem de fato roda a análise, do escopo à apresentação de resultado.</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section class="section alt">
+      <div class="container">
+        <div class="eyebrow">Processo</div>
+        <h2>Como um projeto acontece</h2>
+
+        <div class="process">
+          <div class="step">
+            <div class="n">ETAPA 01</div>
+            <h3>Diagnóstico</h3>
+            <p>Entendemos a pergunta real por trás do pedido e avaliamos se os dados disponíveis sustentam a resposta.</p>
+          </div>
+          <div class="step">
+            <div class="n">ETAPA 02</div>
+            <h3>Escopo &amp; proposta</h3>
+            <p>Definimos método, prazo e entregas por escrito. </p>
+          </div>
+          <div class="step">
+            <div class="n">ETAPA 03</div>
+            <h3>Execução</h3>
+            <p>Tratamento de dados, modelagem e validação, com encontros periódicos para você acompanhar.</p>
+          </div>
+          <div class="step">
+            <div class="n">ETAPA 04</div>
+            <h3>Entrega</h3>
+            <p>Relatório, visualizações e apresentação dos resultados em linguagem acessível.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CANDIDATOS (seção separada) -->
-<section id="candidatos" class="section candidates" aria-label="Equipe / Candidatos">
-  
-  <!-- 🔥 BACKGROUND DE VÍDEO APENAS NESTA SEÇÃO -->
-  <video class="bg-video" autoplay loop muted playsinline>
-    <source src="img/2.mp4" type="video/mp4">
-  </video>
+   <!-- SERVIÇOS -->
+<section class="section" id="servicos">
 
-  <div class="container equipe-content">
-    <h2>Equipe</h2>
 
-    <div class="candidatos">
-      <div class="card">
-        <a href="http://lattes.cnpq.br/2395133912263009">
-          <img src="img/joao.png" alt="Foto do Pesquisador João Vitor">
-        </a>
-        <h2>João Vitor</h2>
-        <p>Analista de Dados<br>Cientista Social</p>
-      </div>
+    <div class="container section-content">
+        <div class="eyebrow">Serviços</div>
+        <h2>O que fazemos, na prática</h2>
 
-      <div class="card">
-        <a href="http://lattes.cnpq.br/4439237435612324">
-          <img src="img/carla.png" alt="Foto da Pesquisadora Carla Djaine">
-        </a>
-        <h2>Carla Djaine</h2>
-        <p>Analista de Dados<br>Doutoranda, Mestre e Cientista Social.</p>
-      </div>
-
-      <div class="card">
-        <a href=" http://lattes.cnpq.br/4964138296528407">
-          <img src="img/syang.png" alt="Foto do Pesquisadora Syang Aires">
-        </a>
-        <h2>Syang Aires</h2>
-        <p>Analista de Dados<br>Cientista Social e Programadora WEB.</p>
-      </div>
+        <div class="cards">
+            <article class="service-card">
+                <div class="eyebrow">01 · Estatística</div>
+                <h3>Análises Estatísticas</h3>
+                <p>Testes de hipótese, regressões, séries temporais...</p>
+            </article>
+            <article class="service-card">
+                <div class="eyebrow">02 · Machine Learning</div>
+                <h3>Aprendizado de Máquina</h3>
+                <p>Segmentação de público, detecção de padrões...</p>
+            </article>
+            <article class="service-card">
+                <div class="eyebrow">03 · Metodologia</div>
+                <h3>Projetos e Pesquisas</h3>
+                <p>Apoio no desenho metodológico, amostragem...</p>
+            </article>
+            <article class="service-card">
+                <div class="eyebrow">04 · Engenharia</div>
+                <h3>Banco de Dados</h3>
+                <p>Construção, limpeza e estruturação de bases de dados.</p>
+            </article>
+        </div>
     </div>
-  </div>
 </section>
 
 
-    <!-- GALERIA (seção separada) -->
-    <section id="galeria" class="section gallery" aria-label="Galeria">
+    <!-- CASES (galeria filtrada + contexto) -->
+    <section class="section alt" id="casos">
       <div class="container">
-        <h2>Galeria</h2>
-        <div class="gallery-container">
-          <a href="#chick-hicks" class="gallery-items">
-            <img src="img/fake_news_gtrends.gif" alt="Chick Hicks">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/doctor hudson.jpg" alt="Doctor Hudson">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/Fillmore.jpg" alt="Fillmore">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/flo.jpg" alt="Flo">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/Guido.png" alt="Guido">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/lightning-mcqueen.jpg" alt="lightning-mcqueen">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/Lizzie.jpg" alt="Lizzie">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/Luigi.png" alt="Luigi">
-          </a>
-          <a href="#" class="gallery-items">
-            <img src="img/Mack.jpg" alt="Mack">
-          </a>
-        </div>
-      </div>
-    </section>
+        <div class="eyebrow">Resultados</div>
+        <h2>Alguns trabalhos recentes</h2>
 
-    <!-- SERVIÇOS -->
-    <section id="servicos" class="section services" aria-label="Serviços">
-      <video autoplay muted loop playsinline class="bg-video">
-        <source src="img/1.mp4" type="video/mp4">
-        Seu navegador não suporta a tag de vídeo.
-      </video>
-
-      <div class="container">
-        <h2>Serviços</h2>
-        <div class="cards">
-          <article class="service-card reveal-on-scroll">
-            <h3>Modelagem & Arquitetura</h3>
-            <p>Estruturação de dados, pipelines e governança para análises confiáveis.</p>
-          </article>
-
-          <article class="service-card reveal-on-scroll">
-            <h3>Análises Estatísticas Avançadas</h3>
-            <p>Inferência, testes, séries temporais e modelos customizados.</p>
-          </article>
-
-          <article class="service-card reveal-on-scroll">
-            <h3>Business Intelligence</h3>
-            <p>Dashboards interativos, monitoramento contínuo e KPIs estratégicos.</p>
-          </article>
-
-          <article class="service-card reveal-on-scroll">
-            <h3>Pesquisa Aplicada</h3>
-            <p>Desenho amostral, análises complexas e relatórios técnicos reproduzíveis.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Modal Game -->
-    <div id="jcs-game-modal" class="jcs-game-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="jcs-game-title">
-      <div class="jcs-game-backdrop" data-close></div>
-
-      <div class="jcs-game-shell" role="document">
-        <header class="jcs-game-header">
-          <div>
-            <strong id="jcs-game-title">Desafio da Análise de Dados</strong>
-            <small>Vivencie três etapas do fluxo analítico — descubra como a JCS pode ajudar.</small>
+        <div class="gallery-list">
+          <div class="case">
+            <div class="thumb"><img src="img/pesos_pca_animado.gif" alt="Gráfico de tendência de buscas sobre fake news" onerror="this.style.display='none'"></div>
+            <div class="body">
+              <div class="fig">FIG. 01 — Monitoramento de Variáveis</div>
+              <h3>Índice MUNIC</h3>
+              <p>Construção de um índice a partir do banco de dados da MUNIC para a classificação das capacidades estatais dos municípios do Rio Grande do Norte.</p>
+            </div>
           </div>
-          <button id="jcs-close" class="jcs-btn-close" aria-label="Fechar desafio">✕</button>
-        </header>
-
-        <main class="jcs-game-main">
-          <section class="jcs-stage" data-stage="intro">
-            <h4>Bem-vindo ao Desafio</h4>
-            <p>Você enfrentará 3 etapas: <em>Dados bagunçados</em>, <em>Escolha do modelo</em> e <em>Visualização</em>. Sons sutis indicam progresso. Boa sorte!</p>
-            <div class="jcs-game-controls">
-              <button id="jcs-start" class="btn primary">Iniciar Desafio</button>
-              <button id="jcs-exit" class="btn ghost">Fechar</button>
+          <div class="case">
+            <div class="thumb"><img src="img/mapa_rn_votos_animado.gif" alt="Mapa animado de votação no RN" onerror="this.style.display='none'"></div>
+            <div class="body">
+              <div class="fig">FIG. 02 — Geolocalização eleitoral</div>
+              <h3>Mapa de votação por município (RN)</h3>
+              <p>Visualização geoespacial da distribuição de votos, usada como apoio de análise para cobertura jornalística.</p>
             </div>
-          </section>
-
-          <section class="jcs-stage" data-stage="phase1" hidden>
-            <h4>Fase 1 — Dados bagunçados</h4>
-            <p>Clique nos valores <strong>incorretos</strong> na tabela antes de terminar (controle de 12s).</p>
-            <div id="jcs-grid" class="jcs-grid" aria-live="polite"></div>
-            <div class="jcs-small-note">Tempo restante: <span id="jcs-timer">12</span>s</div>
-            <div class="jcs-game-controls">
-              <button id="jcs-phase1-skip" class="btn ghost">Pular</button>
+          </div>
+          <div class="case">
+            <div class="thumb"><img src="img/grafico_animado.gif" alt="Gráfico de barras sobre identidade e vestuário" onerror="this.style.display='none'"></div>
+            <div class="body">
+              <div class="fig">FIG. 03 — Pesquisa de campo</div>
+              <h3>Expressão de identidade por meio do vestuário</h3>
+              <p>Tabulação e visualização de escala Likert (n=375) para pesquisa de Ciências Sociais sobre consumo e identidade.</p>
             </div>
-          </section>
-
-          <section class="jcs-stage" data-stage="phase2" hidden>
-            <h4>Fase 2 — Escolha do modelo</h4>
-            <p>Qual abordagem é mais adequada para categorizar clientes por comportamento?</p>
-            <div class="jcs-choices" id="jcs-models">
-              <button data-choice="regression" class="jcs-choice">Regressão</button>
-              <button data-choice="clustering" class="jcs-choice">Clusterização</button>
-              <button data-choice="classification" class="jcs-choice">Classificação</button>
+          </div>
+          <div class="case">
+            <div class="thumb"><img src="img/grafico_alimentos_animado.gif" alt="Correlação entre variáveis" onerror="this.style.display='none'"></div>
+            <div class="body">
+              <div class="fig">FIG. 04 — Modelo de correlação</div>
+              <h3>Perfil socioeconômico × frequência de consumo de carne e seus substitutos </h3>
+              <p>Caracterização do perfil socioeconômico das pessoas que reduziram o consumo de carne no Brasil</p>
             </div>
-            <div class="jcs-game-controls">
-              <button id="jcs-phase2-skip" class="btn ghost">Pular</button>
-            </div>
-          </section>
+          </div>
+        </div>
 
-          <section class="jcs-stage" data-stage="phase3" hidden>
-            <h4>Fase 3 — Visualização correta</h4>
-            <p>Qual gráfico você usaria para mostrar uma tendência temporal de vendas?</p>
-            <div class="jcs-choices" id="jcs-charts">
-              <button data-choice="pie" class="jcs-choice">Pizza</button>
-              <button data-choice="bar" class="jcs-choice">Barras</button>
-              <button data-choice="line" class="jcs-choice">Linha</button>
-            </div>
-          </section>
+      </div>
+    </section>
 
-          <section class="jcs-stage" data-stage="final" hidden>
-            <div class="jcs-final-card">
-              <h3>Parabéns — Desafio concluído</h3>
-              <p>Você enfrentou os desafios essenciais da análise de dados. Com a <strong>JCS Consultoria e Análise de Dados</strong>, essas etapas tornam-se processos automatizados, confiáveis e com impacto real nas decisões.</p>
-              <div class="jcs-game-controls">
-                <button id="jcs-contact-btn" class="btn primary">Falar com a JCS</button>
-                <button id="jcs-play-again" class="btn ghost">Jogar novamente</button>
+
+
+    <!-- EQUIPE -->
+    <section class="section alt" id="equipe">
+      <div class="container">
+        <div class="eyebrow">Equipe</div>
+        <h2>Nosso time de analistas</h2>
+        <div class="team-grid">
+          <div class="member">
+            <div class="ph"><img src="img/Joao.png" alt="Foto de João Vitor" onerror="this.style.display='none'"></div>
+            <div class="info">
+              <h3>João Vitor</h3>
+              <p>Cientista Social, Mestrando em Ciências Sociais e Analista de Dados</p>
+              <div class="links">
+                <a href="http://lattes.cnpq.br/2395133912263009">Lattes</a>
+                <a href="#">LinkedIn</a>
               </div>
             </div>
-          </section>
-        </main>
-
-        <footer class="jcs-game-footer">
-          <small>Desafio criado para demonstrar desafios reais de análise. Sons e interações são opcionais e leves.</small>
-        </footer>
-      </div>
-    </div>
-
-    <!-- CASES -->
-    <section id="cases" class="section cases" aria-label="Cases">
-      <div class="container">
-        <h2> Projetos</h2>
-        <div class="case-grid">
-          <figure class="case-card reveal-on-scroll">
-            <div class="case-thumb">Projeto A</div>
-            <figcaption>
-              <h4>Análise de Sentimento</h4>
-              <h5> aaaaaaaaaaa</h5>
-            </figcaption>
-          </figure>
-
-          <figure class="case-card reveal-on-scroll">
-            <div class="case-thumb">Projeto B</div>
-            <figcaption>
-              <h4>Estudo epidemiológico</h4>
-              <h5>Análises que apoiaram decisões em saúde pública.</h5>
-            </figcaption>
-          </figure>
-
-          <figure class="case-card reveal-on-scroll">
-            <div class="case-thumb">Projeto C</div>
-            <figcaption>
-              <h4>Modelos preditivos</h4>
-              <h5>Modelagem para otimização de rotinas operacionais</h5>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-        <!-- CONTATO -->
-    <section id="contato" class="section contact" aria-label="Contato">
-      <div class="container">
-        <h2>Contato</h2>
-
-        <div class="contact-grid">
-          <div class="contact-info reveal-on-scroll">
-            <p>Para propostas e contratações, envie uma mensagem. Respondemos preferencialmente em até 48 horas úteis.</p>
-            <ul class="info-list">
-              <li><strong>E-mail</strong><span> jcsconsultoriaeanalise@outlook.com</span></li>
-              <li><strong>Telefone</strong><span>+55 (84) 9 9604-8504</span></li>
-            </ul>
           </div>
-
-          <form class="contact-form reveal-on-scroll" id="contactForm" action="https://formsubmit.co/seuemail@exemplo.com" method="POST" novalidate>
-            <input type="hidden" name="_subject" value="Contato JCS - Website">
-            <input type="hidden" name="_captcha" value="false">
-
-            <label><span>Nome</span><input type="text" name="nome" required></label>
-            <label><span>E-mail</span><input type="email" name="email" required></label>
-            <label><span>Empresa / Instituição</span><input type="text" name="empresa" placeholder="opcional"></label>
-            <label><span>Mensagem</span><textarea name="mensagem" rows="5" required></textarea></label>
-
-            <div class="form-actions">
-              <button type="submit" class="btn primary">Enviar Mensagem</button>
-              <button type="reset" class="btn ghost">Limpar</button>
+          <div class="member">
+            <div class="ph"><img src="img/Carla.png" alt="Foto de Carla Djaine" onerror="this.style.display='none'"></div>
+            <div class="info">
+              <h3>Carla Djaine</h3>
+              <p>Cientista Social, Doutoranda e Mestre em Ciências Sociais, Analista de Dados</p>
+              <div class="links">
+                <a href="http://lattes.cnpq.br/4439237435612324">Lattes</a>
+                <a href="#">LinkedIn</a>
+              </div>
             </div>
-
-            <p class="form-note" aria-live="polite"></p>
-          </form>
+          </div>
+          <div class="member">
+            <div class="ph"><img src="img/Syang.png" alt="Foto de Syang Aires" onerror="this.style.display='none'"></div>
+            <div class="info">
+              <h3>Syang Aires</h3>
+              <p>Cientista Social, Mestranda em Ciências Sociais, Analista de Dados e Programadora Web</p>
+              <div class="links">
+                <a href="http://lattes.cnpq.br/4964138296528407">Lattes</a>
+                <a href="#">LinkedIn</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      
     </section>
 
+  <!-- PUBLICAÇÕES -->
+    <section class="section" id="publicacoes">
 
-  <footer class="footer" role="contentinfo">
+      <div class="container">
+        <div class="eyebrow">Publicações</div>
+        <h2>Trabalhos e pesquisas</h2>
+        <p style="max-width:60ch;margin-top:14px;">Artigos, capítulos e relatórios técnicos produzidos  pela equipe. Cada entrada traz um resumo e o link de acesso ao texto completo.</p>
+
+        <div class="pub-list">
+
+          <article class="pub-card">
+            <div>
+              <div class="pub-meta-row">
+                <span class="pub-type">Artigo</span>
+                <span class="pub-year">2024</span>
+              </div>
+              <h3>Flexitarians in Brazil: Who are they, what do they eat, and why?</h3>
+              <p class="pub-authors">Carla D. Teixeira; Dirce Maria Marchioni; Virginia W. de L. Motta; Viviany M. Chaves; Sávio M. Gomes; Michelle C. M. Jacob</p>
+              <p class="pub-excerpt">
+                Primeira investigação científica focada em flexitarianos brasileiros, com o objetivo de
+                caracterizar seus perfis socioeconômicos e demográficos, as motivações para a adoção do
+                flexitarianismo, a frequência de consumo de carne de origem animal e os principais
+                substitutos de carne que consomem.
+              </p>
+              <div class="pub-venue">Publicado em <b>Appetite</b></div>
+            </div>
+            <div class="pub-action">
+              <a href="https://www.sciencedirect.com/science/article/abs/pii/S0195666323025552?via%3Dihub" target="_blank" rel="noopener" class="pub-link">
+                Acessar texto
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </a>
+            </div>
+          </article>
+
+          <article class="pub-card">
+            <div>
+              <div class="pub-meta-row">
+                <span class="pub-type">Artigo</span>
+                <span class="pub-year">2024</span>
+              </div>
+              <h3>Beyond gender: Exploring sexual orientation, race and motivations among Brazilian flexitarians</h3>
+              <p class="pub-authors">Carla Djaine Teixeira; Sávio Marcelino Gomes; Michelle Cristine Medeiros Jacob</p>
+              <p class="pub-excerpt">
+                Análise de 989 indivíduos brasileiros identificados como flexitarianos para explorar a relação
+                entre gênero, orientação sexual e o comportamento de redução do consumo de carne, avaliando
+                simultaneamente o impacto das motivações que levam os indivíduos a adotar esse modelo alimentar.
+              </p>
+              <div class="pub-venue">Publicado em <b>Appetite</b></div>
+            </div>
+            <div class="pub-action">
+              <a href="https://pubmed.ncbi.nlm.nih.gov/38734376/" target="_blank" rel="noopener" class="pub-link">
+                Acessar texto
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section alt" id="contato">
+      <div class="container contact-grid">
+        <div>
+          <div class="eyebrow">Contato</div>
+          <h2>Vamos conversar sobre o seu projeto</h2>
+          <p>Informe sua demanda e retornamos com um diagnóstico inicial.</p>
+          <ul class="info-list">
+            <li><strong>E-mail</strong><span>jcsconsultoriadados@gmail.com</span></li>
+            <li><strong>Telefone</strong><span>+55 (84) 9 9604-8504</span></li>
+            <li><strong>Sedes</strong><span>RN/PE · atendimento remoto</span></li>
+          </ul>
+        </div>
+
+        <form class="contact-form" action="https://formsubmit.co/jcsconsultoriadados@gmail.com" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Contato JCS - Website">
+          <label><span>Nome</span><input type="text" name="nome" required></label>
+          <label><span>E-mail</span><input type="email" name="email" required></label>
+          <label><span>Empresa / Instituição</span><input type="text" name="empresa" placeholder="opcional"></label>
+          <label><span>Qual problema você quer resolver?</span><textarea name="mensagem" rows="5" required></textarea></label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Enviar mensagem</button>
+            <button type="reset" class="btn ghost">Limpar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+
+  <footer class="footer">
     <div class="container footer-inner">
-      <p>© <span id="year"></span> JCS Consultoria e Análise de Dados — Todos os direitos reservados.</p>
-      <small>Política de privacidade • Termos</small>
+      <span>© 2026 JCS Consultoria e Análise de Dados</span>
+      <span>Política de privacidade · Termos</span>
     </div>
   </footer>
 
-  <script src="main.js" defer></script>
+  <script>
+  (function(){
+    var html = document.documentElement;
+    var splash = document.getElementById('splash');
 
+    // ---- Contagem animada dos números de estatística ----
+    function animateCount(el){
+      var to = parseInt(el.getAttribute('data-count-to'), 10);
+      var suffix = el.getAttribute('data-suffix') || '';
+      if (isNaN(to)) return;
+      var duration = 900, startTime = null;
+      function step(ts){
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        el.textContent = Math.floor(progress * to) + suffix;
+        if (progress < 1) { requestAnimationFrame(step); }
+        else { el.textContent = to + suffix; }
+      }
+      requestAnimationFrame(step);
+    }
+    function runCounters(){
+      document.querySelectorAll('.stat .num[data-count-to]').forEach(animateCount);
+    }
+
+    // ---- Splash ----
+    if (splash) {
+      html.classList.add('no-scroll');
+      var startBtn = document.getElementById('splash-start-btn');
+
+      function closeSplash(){
+        splash.classList.add('hide');
+        html.classList.remove('no-scroll');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        runCounters();
+        setTimeout(function(){
+          if (splash && splash.parentNode) { splash.parentNode.removeChild(splash); }
+        }, 850);
+      }
+
+      startBtn.addEventListener('click', closeSplash);
+      startBtn.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeSplash(); }
+      });
+      startBtn.focus({ preventScroll: true });
+    } else {
+      runCounters();
+    }
+
+    // ---- Barra de progresso de leitura ----
+    var progressBar = document.getElementById('scroll-progress');
+    function updateProgress(){
+      var doc = document.documentElement;
+      var scrollTop = doc.scrollTop || document.body.scrollTop;
+      var height = doc.scrollHeight - doc.clientHeight;
+      var pct = height > 0 ? (scrollTop / height) * 100 : 0;
+      if (progressBar) progressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // ---- Revelação ao rolar ----
+    var revealSelector = [
+      '.process .step', '.cards .service-card', '.gallery-list .case', '.team-grid .member',
+      '.pub-list .pub-card', '.feature-list li', '.about-grid > div', '.contact-grid > div',
+      '.section > .container > .eyebrow', '.section > .container > h2'
+    ].join(',');
+    var revealEls = document.querySelectorAll(revealSelector);
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(function(el){ io.observe(el); });
+    } else {
+      revealEls.forEach(function(el){ el.classList.add('in-view'); });
+    }
+  })();
+  </script>
 
 </body>
 </html>
